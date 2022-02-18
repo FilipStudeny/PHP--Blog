@@ -17,13 +17,13 @@
         <h1 class="PageTitle">Blog</h1>
         <div class="HeadContent">
             <nav class="Links">
-                <a>Home</a>
+                <a href="/">Home</a>
                 <a>Create new Post</a>
                 <a>About</a>
             </nav>
             <nav class="AuthPanel">
                 <a href="signUp.php">Sign up</a>
-                <a>Login</a>
+                <a href="login.php">Login</a>
             </nav>
         </div>
        

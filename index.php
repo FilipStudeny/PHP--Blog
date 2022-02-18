@@ -1,5 +1,5 @@
 <?php
-include_once "header.php"
+    include_once "./Components/header.php"
 ?>
 
 <main class="PageBody">
@@ -19,5 +19,5 @@ include_once "header.php"
 
     </main>
 <?php
-    include_once "footer.php"
+    include_once "./Components/footer.php"
 ?>
