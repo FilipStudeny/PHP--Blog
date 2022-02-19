@@ -89,5 +89,40 @@ function CreateNewUser($connection, $name, $surname, $username, $password, $emai
 
 }
 
+function InputFieldsLogin($username, $password){
+    $result = false;
+
+    if(empty($username) || empty($password)){
+        $result = true;
+    }else{
+        $result = false;
+    }
+
+    return $result;
+}
+
+function LoginUser($connection, $username, $password){
+    $userAlreadyExists = UserNameTaken($connection, $username, $username);
+
+    if( $userAlreadyExists === false){
+        header("location: ../login.php?error=UserDoesNotExist");
+        exit();
+    }
+
+    $hashedPassword = $userAlreadyExists["password"];
+    $checkedPassword = password_verify($password, $hashedPassword);
+
+    if($checkedPassword === false){
+        header("location: ../login.php?error=IncorrectPassword");
+        exit();
+    }else if($checkedPassword === true){
+        session_start();
+        $_SESSION["username"] = $userAlreadyExists["username"];
+        
+        header("location: ../index.php");
+        exit();
+    }
+}
+
 
 ?>

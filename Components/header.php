@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,10 +23,22 @@
                 <a>Create new Post</a>
                 <a>About</a>
             </nav>
-            <nav class="AuthPanel">
-                <a href="signUp.php">Sign up</a>
-                <a href="login.php">Login</a>
-            </nav>
+            <?php
+                if(isset($_SESSION["username"])){
+                    echo "<nav class='AuthPanel'>";
+                    echo "<p>" . $_SESSION["username"] . "</p>";
+                    echo "<a href='guards/logout_inc.php'>Logout</a>";
+                    echo "</nav>;";
+                }else{
+                    echo "<nav class='AuthPanel'>";
+                    echo "<a href='signUp.php'>Sign up</a>";
+                    echo "<a href='login.php'>Login</a>";
+                    echo "</nav>;";
+                }
+
+
+            ?>
+           
         </div>
        
 
