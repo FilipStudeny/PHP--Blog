@@ -20,7 +20,14 @@ session_start();
         <div class="HeadContent">
             <nav class="Links">
                 <a href="/">Home</a>
-                <a>Create new Post</a>
+                <?php
+                if(isset($_SESSION["username"])){
+                    echo "<a href='/createPost.php'>Create new Post</a>";
+                }else{
+                    echo "<a href='login.php'>Create new Post</a>";
+                }
+
+                ?>
                 <a>About</a>
             </nav>
             <?php

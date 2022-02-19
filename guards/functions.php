@@ -84,6 +84,14 @@ function CreateNewUser($connection, $name, $surname, $username, $password, $emai
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
+    $newTable = "CREATE TABLE " . $username . " ( 
+                postID INT(6) AUTO_INCREMENT PRIMARY KEY,
+                postName VARCHAR(150) NOT NULL,
+                postBody VARCHAR(500) NOT NULL,
+                timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP )";
+    
+    mysqli_query($connection, $newTable);
+
     header("location: ../signUp.php?error=none");
     exit();
 
@@ -124,5 +132,45 @@ function LoginUser($connection, $username, $password){
     }
 }
 
+function PostFieldsEmpty($postTitle, $postBody){
+    $result = false;
+
+    if(empty($postTitle || empty($postBody))){
+        $result = true;
+    }else{
+        $result = false;
+    }
+
+    return $result;
+}
+
+function EmptyField($text){
+    $result = false;
+
+    if(empty($text)){
+        $result = true;
+    }else{
+        $result = false;
+    }
+
+    return $result;
+}
+
+function CreateNewPost($connection, $username, $postTitle ,$postBody){
+    $SQL = "INSERT INTO $username (postName, postBody) VALUES (?,?);";
+    $stmt = mysqli_stmt_init($connection);
+    
+    if(!mysqli_stmt_prepare($stmt, $SQL)){
+        header("location: ../createPost.php?error=stmtFailed");
+        exit();
+    }
+
+    mysqli_stmt_bind_param($stmt,"ss", $postTitle, $postBody);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
+    header("location: ../createPost.php?error=none");
+    exit();
+}
 
 ?>
