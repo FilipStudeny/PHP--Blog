@@ -74,6 +74,11 @@ body{
     color: rgb(255, 154, 87);
 }
 
+.UserName{
+    color: whitesmoke;
+    text-decoration: none;
+}
+
 .AuthPanel{
     width: 20%;
     font-size: 25px;
@@ -190,4 +195,40 @@ body{
     margin-bottom: 5px;
     color: whitesmoke;
     font-size: 20px;
+}
+
+
+.Post{
+    width: 100%;
+    height: auto;
+
+    padding: 10px 10px 10px 10px;
+    margin-top: 5px;
+    margin-left: 5px;
+
+    background-color: whitesmoke;
+    border-radius: 10px;
+}
+
+.Post p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 10px;
+    padding-left: 10px;
+
+    border-top: 1px solid rgb(156, 156, 156);
+}
+
+.Post div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Post div h4{
+    float: right;
+    color: rgb(138, 138, 138);
 }

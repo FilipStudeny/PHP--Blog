@@ -1,23 +1,15 @@
 <?php
-    include_once "./Components/header.php"
+    include_once "./Components/header.php";
+
+        //ERROR HANDLERS
+        require_once "guards/functions.php";
+        require_once "guards/DatabaseHandler.php";
 ?>
 
 <main class="PageBody">
-        <div>
-            <h3>HEADER 3</h3>
-            <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+    <?= RenderAllPosts($connection); ?>
+</main>
 
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            </p>
-        </div>
-
-    </main>
 <?php
     include_once "./Components/footer.php"
 ?>

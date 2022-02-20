@@ -84,14 +84,6 @@ function CreateNewUser($connection, $name, $surname, $username, $password, $emai
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    $newTable = "CREATE TABLE " . $username . " ( 
-                postID INT(6) AUTO_INCREMENT PRIMARY KEY,
-                postName VARCHAR(150) NOT NULL,
-                postBody VARCHAR(500) NOT NULL,
-                timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP )";
-    
-    mysqli_query($connection, $newTable);
-
     header("location: ../signUp.php?error=none");
     exit();
 
@@ -157,7 +149,7 @@ function EmptyField($text){
 }
 
 function CreateNewPost($connection, $username, $postTitle ,$postBody){
-    $SQL = "INSERT INTO $username (postName, postBody) VALUES (?,?);";
+    $SQL = "INSERT INTO posts (creatorName,postTitle, postBody) VALUES (?,?,?);";
     $stmt = mysqli_stmt_init($connection);
     
     if(!mysqli_stmt_prepare($stmt, $SQL)){
@@ -165,12 +157,46 @@ function CreateNewPost($connection, $username, $postTitle ,$postBody){
         exit();
     }
 
-    mysqli_stmt_bind_param($stmt,"ss", $postTitle, $postBody);
+    mysqli_stmt_bind_param($stmt,"sss", $username ,$postTitle, $postBody);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
     header("location: ../createPost.php?error=none");
     exit();
+}
+
+
+function RenderAllPosts($connection){
+
+    $SQL = "SELECT creatorName, postTitle, postBody, timeOfCreation FROM posts ORDER BY postID DESC";
+    $data = mysqli_query($connection, $SQL);
+
+    //OUTPUT DATA 
+    if(mysqli_num_rows($data) > 0){
+
+        while($row = mysqli_fetch_assoc($data)){
+            $post = "
+            <section class='Post'>
+                <h3>" . $row["postTitle"] . "</h3>
+                <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["postBody"]) . "</p>
+                <div>
+                    <h4>Written by " . $row["creatorName"] . "</h4>
+                    <h4>Date of creation: " . $row["timeOfCreation"] . "</h4>
+                </div>
+            </section>";
+
+            echo $post;
+        }
+    }else{
+        $post = "
+            <section class='Post'>
+                <p> No posts </p>
+            </section>";
+
+            echo $post;
+    }
+
+    mysqli_close($connection);
 }
 
 ?>
