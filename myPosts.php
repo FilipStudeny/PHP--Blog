@@ -10,6 +10,14 @@
 
 <main class="PageBody">
     <?= RenderMyPosts($connection,$username) ?>
+
+    <?php
+    if(isset($_GET["error"])){
+        if($_GET["error"] == "deleteerror"){
+            echo "<p>ERROR DELETING POST TRY AGAIN !</p>";
+        }
+    }
+    ?>
 </main>
 
 <?php

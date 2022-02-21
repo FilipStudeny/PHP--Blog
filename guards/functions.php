@@ -201,7 +201,7 @@ function RenderAllPosts($connection){
 
 function RenderMyPosts($connection, $username){
 
-    $SQL = "SELECT creatorName, postTitle, postBody, timeOfCreation FROM posts WHERE creatorName='$username' ORDER BY postID DESC";
+    $SQL = "SELECT  postID, creatorName, postTitle, postBody, timeOfCreation FROM posts WHERE creatorName='$username' ORDER BY postID DESC";
     $data = mysqli_query($connection, $SQL);
 
     //OUTPUT DATA 
@@ -210,7 +210,13 @@ function RenderMyPosts($connection, $username){
         while($row = mysqli_fetch_assoc($data)){
             $post = "
             <section class='Post'>
-                <h3>" . $row["postTitle"] . "</h3>
+                <div>
+                    <h3>" . $row["postTitle"] . "</h3>
+                    <form action='guards/myPosts_inc.php' method='post'>
+                        <input style='display: none;' type='text' name='postID' value=".$row["postID"] . ">
+                        <button class='DeletePostBtn' type='submit' name='submit' >Delete Post</button>
+                    </form>
+                </div>
                 <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["postBody"]) . "</p>
                 <div>
                     <h4>Written by " . $row["creatorName"] . "</h4>
@@ -230,6 +236,16 @@ function RenderMyPosts($connection, $username){
     }
 
     mysqli_close($connection);
+}
+
+function DeletePost($connection, $postID){
+    $SQL = "DELETE FROM posts WHERE postID='$postID'";
+
+    if(mysqli_query($connection, $SQL)){
+        mysqli_close($connection);
+        header("location: ../myPosts.php");
+        exit();
+    }
 }
 
 ?>
