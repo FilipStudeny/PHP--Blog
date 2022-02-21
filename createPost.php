@@ -15,7 +15,7 @@
             <textarea class="PostTextArea" name="postBody" rows="10" cols="100" placeholder="Post text..."></textarea>
         </div>
         
-        <button type="submit" name="submit">Sign Up</button>
+        <button type="submit" name="submit">Create new post</button>
         <input style="display: none;" name="username" value= <?= $_SESSION["username"] ?>>
     </form>
 <?php

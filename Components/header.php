@@ -28,7 +28,7 @@ session_start();
                 }
 
                 ?>
-                <a>About</a>
+                <a href="/about.php">About</a>
             </nav>
             <?php
                 if(isset($_SESSION["username"])){
@@ -42,11 +42,6 @@ session_start();
                     echo "<a href='login.php'>Login</a>";
                     echo "</nav>;";
                 }
-
-
             ?>
-           
         </div>
-       
-
     </header>

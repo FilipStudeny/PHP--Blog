@@ -188,6 +188,12 @@ body{
     border-radius: 10px;
 }
 
+.SignUpForm button:hover{
+    background-color: rgb(125, 186, 255);
+    cursor: pointer;
+
+}
+
 .PostTextArea{
     width: 100%;
     height: 400px;

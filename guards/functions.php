@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @param string $name  $surname  Name of the person 
+ * @param string $surname Surname of the person
+ * @param string $username  Username of the account
+ * @param string $email  Email adress binded to the account
+ * @param string $password  Password of the account
+ * @return bool $result  Returns true if one of the user inputs contains empty data
+ */
 
 function InputFieldsNotNull($name, $surname, $username, $email, $password, $passwordRepeat){
     $result = false;
@@ -13,6 +21,10 @@ function InputFieldsNotNull($name, $surname, $username, $email, $password, $pass
     return $result;
 };
    
+/**
+ * @param string $username  Username of the account
+ * @return bool $result  Returns true if one of the user inputs contains empty data
+ */
 function InvalidUserName($username){
     $result = false;
     if(!preg_match("/^[a-zA-Z0-9]*$/",$username)){
@@ -23,7 +35,10 @@ function InvalidUserName($username){
     return $result;
 }
 
-
+/**
+ * @param string $email  Email adress binded to the account
+ * @return bool $result  Returns true if one of the user inputs contains empty data
+ */
 function InvalidUserEmail($email){
     $result = false;
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
@@ -34,7 +49,12 @@ function InvalidUserEmail($email){
     return $result;
 }
 
-
+/**
+ * Checks if inputed password matches
+ * @param string $password  Password of the account
+ * @param string $passwordRepeat  Password of the account
+ * @return bool $result  Returns true if one of the user inputs contains empty data
+ */
 function PasswordMatches($password, $passwordRepeat){
     $result = false;
     if($password !== $passwordRepeat){
@@ -45,6 +65,11 @@ function PasswordMatches($password, $passwordRepeat){
     return $result;
 }
 
+/**
+ * Checks if username is already taken
+ * @param string $username  Username of the account
+ * @param string $email  Email adress binded to the account
+ */
 function UserNameTaken($connection, $username, $email){
     $SQL = "SELECT * FROM Users WHERE username = ? OR email = ?;";
 
@@ -70,8 +95,17 @@ function UserNameTaken($connection, $username, $email){
     mysqli_stmt_close($stmt);
 }
 
+/**
+ * Creates new User account
+ * @param string $name  Name of the person
+ * @param string $surname Surname of the person
+ * @param string $username Username of the account
+ * @param string $password Password for the account
+ * @param string $email Email adress binded to the account
+ */
+
 function CreateNewUser($connection, $name, $surname, $username, $password, $email){
-    $SQL = "INSERT INTO Users (username, name, email, password) VALUES (?, ?, ?, ?);";
+    $SQL = "INSERT INTO Users (username, name, surname, email, password) VALUES (?, ?, ?, ?, ?);";
     $stmt = mysqli_stmt_init($connection);
     
     if(!mysqli_stmt_prepare($stmt, $SQL)){
@@ -80,7 +114,7 @@ function CreateNewUser($connection, $name, $surname, $username, $password, $emai
     }
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    mysqli_stmt_bind_param($stmt,"ssss",$username, $name, $email, $hashedPassword);
+    mysqli_stmt_bind_param($stmt,"sssss",$username, $name,  $surname, $email, $hashedPassword);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
@@ -88,6 +122,13 @@ function CreateNewUser($connection, $name, $surname, $username, $password, $emai
     exit();
 
 }
+
+/**
+ * Check if Login input is empty
+ * @param string $username Username of the account
+ * @param string $password Password for the account
+ * @return bool $result Returns true if input is empty
+ */
 
 function InputFieldsLogin($username, $password){
     $result = false;
@@ -100,6 +141,12 @@ function InputFieldsLogin($username, $password){
 
     return $result;
 }
+
+/**
+ * Login user and start new session
+ * @param string $username Username of the account
+ * @param string $password Password for the account
+ */
 
 function LoginUser($connection, $username, $password){
     $userAlreadyExists = UserNameTaken($connection, $username, $username);
@@ -124,6 +171,13 @@ function LoginUser($connection, $username, $password){
     }
 }
 
+/**
+ * Check if Post input is empty
+ * @param string $postTitle Surname of the person
+ * @param string $postBody Username of the account
+ * @return bool $result Returns true if post data is empty
+ */
+
 function PostFieldsEmpty($postTitle, $postBody){
     $result = false;
 
@@ -136,6 +190,11 @@ function PostFieldsEmpty($postTitle, $postBody){
     return $result;
 }
 
+/**
+ * Check if field is empty
+ * @param string $text 
+ * @return bool $result Returns true if  data is empty
+ */
 function EmptyField($text){
     $result = false;
 
@@ -148,6 +207,12 @@ function EmptyField($text){
     return $result;
 }
 
+/**
+ * Create new Post
+ * @param string $username Creator of the post
+ * @param string $postTitle Post title
+ * @param string $postBody Post body
+ */
 function CreateNewPost($connection, $username, $postTitle ,$postBody){
     $SQL = "INSERT INTO posts (creatorName,postTitle, postBody) VALUES (?,?,?);";
     $stmt = mysqli_stmt_init($connection);
@@ -165,7 +230,9 @@ function CreateNewPost($connection, $username, $postTitle ,$postBody){
     exit();
 }
 
-
+/**
+ * Render all posts
+ */
 function RenderAllPosts($connection){
 
     $SQL = "SELECT creatorName, postTitle, postBody, timeOfCreation FROM posts ORDER BY postID DESC";
@@ -199,6 +266,10 @@ function RenderAllPosts($connection){
     mysqli_close($connection);
 }
 
+/**
+ * Render all posts created by user
+ * @param string $username Name of the creator of the post
+ */
 function RenderMyPosts($connection, $username){
 
     $SQL = "SELECT  postID, creatorName, postTitle, postBody, timeOfCreation FROM posts WHERE creatorName='$username' ORDER BY postID DESC";
@@ -238,6 +309,10 @@ function RenderMyPosts($connection, $username){
     mysqli_close($connection);
 }
 
+/**
+ * Delete post
+ * @param string $postID 
+ */
 function DeletePost($connection, $postID){
     $SQL = "DELETE FROM posts WHERE postID='$postID'";
 
