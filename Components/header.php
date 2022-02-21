@@ -33,7 +33,7 @@ session_start();
             <?php
                 if(isset($_SESSION["username"])){
                     echo "<nav class='AuthPanel'>";
-                    echo "<p class='UserName'>" . $_SESSION["username"] . "</p>";
+                    echo "<a href='myPosts.php' class='UserName'>" . $_SESSION["username"] . "</a>";
                     echo "<a href='guards/logout_inc.php'>Logout</a>";
                     echo "</nav>;";
                 }else{

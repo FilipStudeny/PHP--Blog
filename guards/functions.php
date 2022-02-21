@@ -199,4 +199,37 @@ function RenderAllPosts($connection){
     mysqli_close($connection);
 }
 
+function RenderMyPosts($connection, $username){
+
+    $SQL = "SELECT creatorName, postTitle, postBody, timeOfCreation FROM posts WHERE creatorName='$username' ORDER BY postID DESC";
+    $data = mysqli_query($connection, $SQL);
+
+    //OUTPUT DATA 
+    if(mysqli_num_rows($data) > 0){
+
+        while($row = mysqli_fetch_assoc($data)){
+            $post = "
+            <section class='Post'>
+                <h3>" . $row["postTitle"] . "</h3>
+                <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["postBody"]) . "</p>
+                <div>
+                    <h4>Written by " . $row["creatorName"] . "</h4>
+                    <h4>Date of creation: " . $row["timeOfCreation"] . "</h4>
+                </div>
+            </section>";
+
+            echo $post;
+        }
+    }else{
+        $post = "
+            <section class='Post'>
+                <p> No posts </p>
+            </section>";
+
+        echo $post;
+    }
+
+    mysqli_close($connection);
+}
+
 ?>
