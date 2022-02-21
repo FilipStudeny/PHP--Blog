@@ -7,7 +7,7 @@
 
 <section class="SignUpSection">
     <form class="SignUpForm" action="guards/createPost_inc.php" method="post">
-        <h3 class="CreatePostTitle">Create new Post + <?= $_SESSION["username"]  ?></h3>
+        <h3 class="CreatePostTitle">Create new Post</h3>
         <div>
             <input type="text" name="postTitle" placeholder="Post title...">
         </div>

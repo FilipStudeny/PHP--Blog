@@ -84,7 +84,7 @@ function CreateNewUser($connection, $name, $surname, $username, $password, $emai
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    header("location: ../signUp.php?error=none");
+    header("location: ../index.php");
     exit();
 
 }
@@ -161,7 +161,7 @@ function CreateNewPost($connection, $username, $postTitle ,$postBody){
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
-    header("location: ../createPost.php?error=none");
+    header("location: ../index.php");
     exit();
 }
 
