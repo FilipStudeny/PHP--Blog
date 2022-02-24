@@ -226,6 +226,26 @@ function CreateNewPost($connection, $username, $postTitle ,$postBody){
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
 
+    $postTitle = "SELECT postID FROM posts WHERE postTitle='$postTitle'";
+    $stmt = mysqli_stmt_init($connection);
+    $result = mysqli_query($connection,$postTitle);
+
+    $postTable = NULL;
+    if(mysqli_num_rows($result) > 0){
+        while($row = mysqli_fetch_assoc($result)){
+            $postTable = "post".$row['postID'];
+        }
+    }
+    $SQL = "CREATE TABLE $postTable (
+        ID INT(6) AUTO_INCREMENT PRIMARY KEY,
+        commentCreator VARCHAR(100) NOT NULL,
+        commentBody VARCHAR(300) NOT NULL,
+        timeOfCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
+
+    if (mysqli_query($connection, $SQL)) {
+        echo "Table MyGuests created successfully";
+    }
+
     header("location: ../index.php");
     exit();
 }
@@ -320,10 +340,13 @@ function RenderMyPosts($connection, $username){
  */
 function DeletePost($connection, $postID){
     $SQL = "DELETE FROM posts WHERE postID='$postID'";
+    $commentTableName = "post".$postID;
+    $commentTable ="DROP TABLE  $commentTableName";
 
-    if(mysqli_query($connection, $SQL)){
-        mysqli_close($connection);
-        header("location: ../myPosts.php");
+
+    mysqli_query($connection, $SQL);
+    if(mysqli_query($connection, $commentTable)){
+        header("location: ../index.php");
         exit();
     }
 }
@@ -380,6 +403,76 @@ function ShowPostDetail($connection, $postID){
         echo $post;
     }
 
-    mysqli_close($connection);
 }
+
+
+function CreateNewComment($connection, $commentBody, $creator ,$postID){
+    $postTitle = "SELECT postID FROM posts WHERE postID='$postID'";
+    $stmt = mysqli_stmt_init($connection);
+    $result = mysqli_query($connection,$postTitle);
+
+    $postTable = NULL;
+    if(mysqli_num_rows($result) > 0){
+        while($row = mysqli_fetch_assoc($result)){
+            $postTable = "post".$row['postID'];
+        }
+    }
+    
+    $SQL = "INSERT INTO $postTable (commentCreator,commentBody) VALUES (?,?);";
+    
+    if(!mysqli_stmt_prepare($stmt, $SQL)){
+        header("location: ../postDetail.php?postID=$postID&error=stmtFailed");
+        exit();
+    }
+
+    mysqli_stmt_bind_param($stmt,"ss", $creator ,$commentBody);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
+    header("location: ../postDetail.php?postID=$postID");
+    exit();
+}
+
+function RenderAllComments($connection, $postID){
+    $postTitle = "SELECT postID FROM posts WHERE postID='$postID'";
+    $stmt = mysqli_stmt_init($connection);
+    $result = mysqli_query($connection,$postTitle);
+
+    $postTable = NULL;
+    if(mysqli_num_rows($result) > 0){
+        while($row = mysqli_fetch_assoc($result)){
+            $postTable = "post".$row['postID'];
+        }
+    }
+    $SQL = "SELECT commentCreator, commentBody, timeOfCreation FROM $postTable ORDER BY ID DESC";
+
+    $data = mysqli_query($connection, $SQL);
+
+    //OUTPUT DATA 
+    if(mysqli_num_rows($data) > 0){
+
+        while($row = mysqli_fetch_assoc($data)){
+
+            $post = "
+            <div class='Comment'>
+                <div>
+                    <h1>" . $row["commentCreator"] . "</h1>
+                    <h3>" . $row["timeOfCreation"] . "</h3>
+                </div>
+                <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["commentBody"]) . "</p>
+            </div>";
+            echo $post;
+        }
+    }else{
+        $post = "
+        <div class='Comment'>
+            <p>No comments</p>
+         </div>";
+
+        echo $post;
+    }
+
+   // mysqli_close($connection);
+}
+
 ?>
