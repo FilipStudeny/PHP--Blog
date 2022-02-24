@@ -235,23 +235,27 @@ function CreateNewPost($connection, $username, $postTitle ,$postBody){
  */
 function RenderAllPosts($connection){
 
-    $SQL = "SELECT creatorName, postTitle, postBody, timeOfCreation FROM posts ORDER BY postID DESC";
+    $SQL = "SELECT postID, creatorName, postTitle, postBody, timeOfCreation FROM posts ORDER BY postID DESC";
     $data = mysqli_query($connection, $SQL);
 
     //OUTPUT DATA 
     if(mysqli_num_rows($data) > 0){
 
         while($row = mysqli_fetch_assoc($data)){
+
             $post = "
             <section class='Post'>
-                <h3>" . $row["postTitle"] . "</h3>
+                <a href='/postDetail.php?postID=".$row['postID']."'>
+                <div>
+                    <h3>" . $row["postTitle"] . "</h3>
+                </div>
                 <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["postBody"]) . "</p>
                 <div>
                     <h4>Written by " . $row["creatorName"] . "</h4>
                     <h4>Date of creation: " . $row["timeOfCreation"] . "</h4>
                 </div>
+                </a>
             </section>";
-
             echo $post;
         }
     }else{
@@ -281,7 +285,7 @@ function RenderMyPosts($connection, $username){
         while($row = mysqli_fetch_assoc($data)){
             $post = "
             <section class='Post'>
-            <a href='/postDetail.php?postID=".$row['postID']."'>
+                <a href='/postDetail.php?postID=".$row['postID']."'>
                 <div>
                     <h3>" . $row["postTitle"] . "</h3>
                     <form action='guards/myPosts_inc.php' method='post'>
@@ -294,9 +298,8 @@ function RenderMyPosts($connection, $username){
                     <h4>Written by " . $row["creatorName"] . "</h4>
                     <h4>Date of creation: " . $row["timeOfCreation"] . "</h4>
                 </div>
-            </a>
+                </a>
             </section>";
-
             echo $post;
         }
     }else{
@@ -325,7 +328,6 @@ function DeletePost($connection, $postID){
     }
 }
 
-
 function ShowPostDetail($connection, $postID){
 
     $SQL = "SELECT  postID, creatorName, postTitle, postBody, timeOfCreation FROM posts WHERE postID='$postID'";
@@ -335,22 +337,38 @@ function ShowPostDetail($connection, $postID){
     if(mysqli_num_rows($data) > 0){
 
         while($row = mysqli_fetch_assoc($data)){
-            $post = "
-            <section class='Post'>
-                <div>
-                    <h3>" . $row["postTitle"] . "</h3>
-                    <form action='guards/myPosts_inc.php' method='post'>
-                        <input type='text' name='postID' value=".$row["postID"] . ">
-                        <button class='DeletePostBtn' type='submit' name='submit' >Delete Post</button>
-                    </form>
-                </div>
-                <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["postBody"]) . "</p>
-                <div>
-                    <h4>Written by " . $row["creatorName"] . "</h4>
-                    <h4>Date of creation: " . $row["timeOfCreation"] . "</h4>
-                </div>
-            </section>";
-
+            $post = NULL; 
+            if($_SESSION['username'] === $row["creatorName"]){
+               $post = 
+               "<section class='Post'>
+                    <div>"
+                        .$_SESSION['username']."
+                        <h3>" . $row["postTitle"] . "</h3> 
+                        <form action='guards/myPosts_inc.php' method='post'>
+                            <input style='display: none;' type='text' name='postID' value=".$row["postID"] . ">
+                            <button class='DeletePostBtn' type='submit' name='submit' >Delete Post</button>
+                        </form>
+                    </div>
+                    <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["postBody"]) . "</p>
+                    <div>
+                        <h4>Written by " . $row["creatorName"] . "</h4>
+                        <h4>Date of creation: " . $row["timeOfCreation"] . "</h4>
+                    </div>
+                </section>";
+            }else{
+                $post = 
+                "<section class='Post'>
+                     <div>
+                         <h3>" . $row["postTitle"] . "</h3> 
+                     </div>
+                     <p>" . str_replace(array("\r\n", "\r", "\n"), "<br/>",$row["postBody"]) . "</p>
+                     <div>
+                         <h4>Written by " . $row["creatorName"] . "</h4>
+                         <h4>Date of creation: " . $row["timeOfCreation"] . "</h4>
+                     </div>
+                 </section>";
+            }
+            
             echo $post;
         }
     }else{

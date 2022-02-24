@@ -224,6 +224,11 @@ body{
     border-radius: 10px;
 }
 
+.Post a{
+    text-decoration: none;
+    color: rgb(138, 138, 138);
+}
+
 .Post p{
     margin-top: 5px;
     margin-bottom: 5px;
@@ -240,6 +245,14 @@ body{
 
     justify-content: space-between;
     align-items: center;
+}
+
+.Post a div h3{
+    color: rgb(82, 82, 82);
+}
+
+.Post div h3{
+    color: rgb(82, 82, 82);
 }
 
 .Post div h4{
